@@ -4,12 +4,18 @@ let currentDate = document.getElementById('currentDay');
 
 //  Get current date and time
 
-var now = DateTime.now();
+iulet now = DateTime.now();
+let dt = DateTime.local(2017, 5, 15, 8, 30);
 
 console.log(now);
 
-answerButton.innerHTML = now;
-document.body.appendChild(currentDate);
+//jDate.innerHTML = "This is the current Date";
+currentDate.append("jDate");
+
+
+//answerButton.innerHTML = now;
+//document.body.appendChild(currentDate);
+
 
 
 
