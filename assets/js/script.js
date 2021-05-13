@@ -4,8 +4,8 @@ let currentDate = document.getElementById('currentDay');
 
 //  Get current date and time
 
-iulet now = DateTime.now();
-let dt = DateTime.local(2017, 5, 15, 8, 30);
+let now = DateTime.now();
+//let dt = DateTime.local(2017, 5, 15, 8, 30);
 
 console.log(now);
 
