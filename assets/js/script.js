@@ -2,7 +2,7 @@
 //let currentDate = document.getElementById('currentDay');
 let currentDate = $('#currentDay');
 let timeBlock = $('#timeblock');
-
+let rowText = document.querySelector("#row-text");
 
 //  Get current date and time
 
@@ -32,7 +32,7 @@ currentDate.append(jDate, " ", dateDay);
 
 //  Start hours from 9am to 5pm
 let displayHours = {
-    hours: ["9AM","10AM","11AM","12PM","1PM","2PM","3PM","4PM","5PM"]
+    hours: ["9AM","10AM","11AM","12PM","1PM","2PM","3PM","4PM","5PM","10PM"]
 }
 
 console.log(displayHours.hours.length);
@@ -41,8 +41,12 @@ console.log(displayHours.hours.length);
 
 
 //  Store Event in Local Storage
-function saveEvent(messageText) {
+function saveEvent(scheduleEvents) {
+    scheduleEvents.preventDefault();
 
+    var scheduleText = $('input[id="row-text"]').val();
+
+    localStorage.setItem("events", JSON.stringify(scheduleText));
 }
 
 
@@ -60,36 +64,42 @@ function buildLines() {
     for(let i=0; i < displayHours.hours.length; i++){
         //let inputRow = $('input[name="shopping-input"]').val();
 
-        let baseRow = document.createElement("div");
+        let baseRow = document.createElement("form");
         baseRow.setAttribute("class", "row");
+        baseRow.setAttribute("id", "row-text");
 
+//  Time Block
         let hourRow = document.createElement("span");
         hourRow.setAttribute("class", "time-block");
         hourRow.textContent = displayHours.hours[i];
 
         let hourBlock = DateTime.now().toFormat('ha');
-        console.log(hourBlock);
+        console.log("Luxon Date: " + hourBlock);
+
+        let displayHoursBlock = displayHours.hours[i];
+        console.log("Local Date: " + displayHoursBlock);
 
         let addToBute = "";
-        if (displayHours.hours[i] === hourBlock) {
+        if (displayHoursBlock === hourBlock) {
             addToBute = "present";
-        } else if (displayHours.hours[i] > hourBlock) {
+        //} else if (displayHours.hours[i] > hourBlock) {
+        } else if (displayHoursBlock > hourBlock) {
             addToBute = "future";
         } else {
             addToBute = "past";
         }
 
-        console.log(addToBute);
+        console.log("Display Hours: " + displayHours.hours[i]);
+        console.log("Add To Bute: " + addToBute);
 
+//  Schedule Note
         let textArea = document.createElement("textarea");
         textArea.setAttribute("class", "textarea " + addToBute);
         textArea.setAttribute("value", "sText" + displayHours.hours[i]);
         
-
+//  This is the save button
         let saveIcon = document.createElement("i");
         saveIcon.setAttribute("class", "fas fa-save fa-2x");
-
-        //<i class="fas fa-save"></i>
 
         let saveButton = document.createElement("button");
         saveButton.setAttribute("class", "saveBtn");
@@ -102,8 +112,7 @@ function buildLines() {
         baseRow.appendChild(saveButton);
 
         timeBlock.append(baseRow);
-        //timeBlock.appendChild(textArea); 
-       //timeBlock.appendChild(saveEvent(row));
+        //saveButton.on('submit', saveEvent(textArea));
     }
     
 }
