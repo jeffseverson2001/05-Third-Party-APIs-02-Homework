@@ -1,11 +1,11 @@
-//  Declair elements
-//let currentDate = document.getElementById('currentDay');
+//  Declare elements
 let currentDate = $('#currentDay');
 let timeBlock = $('#timeblock');
-let rowText = document.querySelector("#row-text");
+let rowText = $("#row-text");
+
+
 
 //  Get current date and time
-
 let DateTime = luxon.DateTime;
 let jDate = DateTime.now().toFormat('EEEE, MMMM');
 let weekDate = DateTime.now().toFormat('d');
@@ -32,91 +32,128 @@ currentDate.append(jDate, " ", dateDay);
 
 //  Start hours from 9am to 5pm
 let displayHours = {
-    hours: ["9AM","10AM","11AM","12PM","1PM","2PM","3PM","4PM","5PM","10PM"]
+    hours: ["9AM","10AM","11AM","12PM","1PM","2PM","3PM","4PM","5PM"]
 }
-
-console.log(displayHours.hours.length);
-
 
 
 
 //  Store Event in Local Storage
-function saveEvent(scheduleEvents) {
-    scheduleEvents.preventDefault();
+function saveEvent(event) {
+    event.preventDefault();
 
-    var scheduleText = $('input[id="row-text"]').val();
+    let sText9AM = document.querySelector("#sText9AM");
+    let sText10AM = document.querySelector("#sText10AM");
+    let sText11AM = document.querySelector("#sText11AM");
+    let sText12PM = document.querySelector("#sText12PM");
+    let sText1PM = document.querySelector("#sText1PM");
+    let sText2PM = document.querySelector("#sText2PM");
+    let sText3PM = document.querySelector("#sText3PM");
+    let sText4PM = document.querySelector("#sText4PM");
+    let sText5PM = document.querySelector("#sText5PM");
 
-    localStorage.setItem("events", JSON.stringify(scheduleText));
+    //let scheduleText = $('textarea[id="sTExt9AM"]').val();
+    let scheduleText = {
+        sText9AM: sText9AM.value.trim(),
+        sText10AM: sText10AM.value.trim(),
+        sText11AM: sText11AM.value.trim(),
+        sText12PM: sText12PM.value.trim(),
+        sText1PM: sText1PM.value.trim(),
+        sText2PM: sText2PM.value.trim(),
+        sText3PM: sText3PM.value.trim(),
+        sText4PM: sText4PM.value.trim(),
+        sText5PM: sText5PM.value.trim()
+    }
+
+    console.log(scheduleText);
+    localStorage.setItem("scheduleText", JSON.stringify(scheduleText));
 }
 
 
 
-
 //  Get event from local storage for hour line
-
-
+function getEventItems() {
+    let scheduleEvents = localStorage.getItem("scheduleText");
+    return JSON.parse(scheduleEvents);
+}
 
 
 
 //  Build line for each hour with event and save button
+let storedEvents = getEventItems();
 function buildLines() {
 
     for(let i=0; i < displayHours.hours.length; i++){
-        //let inputRow = $('input[name="shopping-input"]').val();
 
-        let baseRow = document.createElement("form");
+        let baseRow = document.createElement("div");
         baseRow.setAttribute("class", "row");
         baseRow.setAttribute("id", "row-text");
+        baseRow.setAttribute("name", "sText" + displayHours.hours[i]);
 
-//  Time Block
+        //  Time Block
         let hourRow = document.createElement("span");
         hourRow.setAttribute("class", "time-block");
         hourRow.textContent = displayHours.hours[i];
 
         let hourBlock = DateTime.now().toFormat('ha');
-        console.log("Luxon Date: " + hourBlock);
 
         let displayHoursBlock = displayHours.hours[i];
-        console.log("Local Date: " + displayHoursBlock);
 
         let addToBute = "";
         if (displayHoursBlock === hourBlock) {
             addToBute = "present";
-        //} else if (displayHours.hours[i] > hourBlock) {
         } else if (displayHoursBlock > hourBlock) {
             addToBute = "future";
         } else {
             addToBute = "past";
         }
 
-        console.log("Display Hours: " + displayHours.hours[i]);
-        console.log("Add To Bute: " + addToBute);
-
-//  Schedule Note
+        //  Schedule Event Text
         let textArea = document.createElement("textarea");
         textArea.setAttribute("class", "textarea " + addToBute);
-        textArea.setAttribute("value", "sText" + displayHours.hours[i]);
-        
-//  This is the save button
+        textArea.setAttribute("id", "sText" + displayHours.hours[i]);
+        if (storedEvents) {
+            if (displayHours.hours[i] === "9AM") {
+                textArea.innerText = storedEvents.sText9AM;
+            } else if (displayHours.hours[i] === "10AM") {
+                textArea.innerText = storedEvents.sText10AM;
+            } else if (displayHours.hours[i] === "11AM") {
+                textArea.innerText = storedEvents.sText11AM;
+            } else if (displayHours.hours[i] === "12PM") {
+                textArea.innerText = storedEvents.sText12PM;
+            } else if (displayHours.hours[i] === "1PM") {
+                textArea.innerText = storedEvents.sText1PM;
+            } else if (displayHours.hours[i] === "2PM") {
+                textArea.innerText = storedEvents.sText2PM;
+            } else if (displayHours.hours[i] === "3PM") {
+                textArea.innerText = storedEvents.sText3PM;
+            } else if (displayHours.hours[i] === "4PM") {
+                textArea.innerText = storedEvents.sText4PM;
+            } else if (displayHours.hours[i] === "5PM") {
+                textArea.innerText = storedEvents.sText5PM;
+            }
+        }
+
+        //  This is the save button
         let saveIcon = document.createElement("i");
         saveIcon.setAttribute("class", "fas fa-save fa-2x");
 
         let saveButton = document.createElement("button");
         saveButton.setAttribute("class", "saveBtn");
-        
         saveButton.append(saveIcon);
-        //saveButton.setAttribute("value", "text"displayHours.hours[i]););
 
-        baseRow.appendChild(hourRow);
-        baseRow.appendChild(textArea);
-        baseRow.appendChild(saveButton);
+        //  Add Elements to Base Element
+        baseRow.append(hourRow);
+        baseRow.append(textArea);
+        baseRow.append(saveButton);
 
         timeBlock.append(baseRow);
-        //saveButton.on('submit', saveEvent(textArea));
     }
-    
+
 }
 
+
+
 //  Add Event Listners
+timeBlock.on('click', '.saveBtn', saveEvent);
 
 buildLines();
